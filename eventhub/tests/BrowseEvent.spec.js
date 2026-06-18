@@ -6,6 +6,9 @@ test.describe('EventHub — Browse Events', () => {
   test('events page lists events', async ({ loggedInPage }) => {
     const events = new BrowseEvent(loggedInPage);
     await events.navigate();
+    // Wait for the list to load (cards arrive asynchronously) before counting,
+    // otherwise count() can read 0 on a slow connection like CI.
+    await expect(events.eventCards.first()).toBeVisible();
     expect(await events.getEventCount()).toBeGreaterThan(0);
   });
 

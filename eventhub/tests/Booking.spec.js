@@ -16,7 +16,9 @@ test.describe('EventHub — Booking', () => {
     const booking = new BookingPage(loggedInPage);
     await booking.book(ATTENDEE.name, getAccount().email, ATTENDEE.phone);
 
-    expect(await booking.isConfirmed()).toBe(true);
+    // Auto-waiting assertion: wait for the confirmation to appear after the
+    // server responds, instead of checking once and failing if it's slow.
+    await expect(booking.confirmationMessage).toBeVisible();
     const ref = await booking.getBookingRef();
     expect(ref).toMatch(/^D-[A-Z0-9]+$/);
 
