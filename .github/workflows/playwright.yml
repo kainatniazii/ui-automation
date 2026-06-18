@@ -15,6 +15,10 @@ jobs:
     # Keep this tag's version in sync with @playwright/test in package.json.
     container:
       image: mcr.microsoft.com/playwright:v1.61.0-noble
+    # The container runs as root but its home dir is owned by another user,
+    # which stops Firefox from launching. Pointing HOME at /root fixes it.
+    env:
+      HOME: /root
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
