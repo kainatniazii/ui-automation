@@ -1,0 +1,6 @@
+{
+  "password": "Password1!",
+  "weakPassword": "abc",
+  "validUser":   { "email": "pw_seed_1781765896056_vek9zn@example.com", "password": "Password1!" },
+  "invalidUser": { "email": "nobody@example.com", "password": "WrongPass1!" }
+}

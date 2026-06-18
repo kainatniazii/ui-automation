@@ -1,9 +1,14 @@
 {
-  "name": "saucedemo-automation",
+  "name": "ui-automation",
   "version": "1.0.0",
-  "description": "",
+  "description": "Playwright UI automation suite (saucedemo + eventhub)",
   "main": "index.js",
-  "scripts": {},
+  "scripts": {
+    "test": "playwright test",
+    "test:eventhub": "playwright test --project=eventhub-chromium",
+    "test:saucedemo": "playwright test --project=saucedemo-chromium",
+    "report": "playwright show-report"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
