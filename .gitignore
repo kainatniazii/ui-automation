@@ -6,3 +6,6 @@ node_modules/
 /blob-report/
 /playwright/.cache/
 /playwright/.auth/
+
+# Auto-generated eventhub test account (created by auth.setup.js)
+eventhub/.auth/

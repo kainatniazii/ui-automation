@@ -1,17 +1,56 @@
 const { defineConfig, devices } = require('@playwright/test');
 
-module.exports = defineConfig({
-  testDir: './tests',
+// ------------------------------------------------------------------ //
+// Each site under test gets its own folder + baseURL.
+// Add a new entry here to onboard another website.
+// ------------------------------------------------------------------ //
+const SITES = [
+  { name: 'saucedemo', testDir: './saucedemo/tests', baseURL: 'https://www.saucedemo.com' },
+  { name: 'eventhub',  testDir: './eventhub/tests',  baseURL: 'https://eventhub.rahulshettyacademy.com' },
+];
 
+const BROWSERS = [
+  { name: 'chromium', device: 'Desktop Chrome' },
+  { name: 'firefox',  device: 'Desktop Firefox' },
+  { name: 'webkit',   device: 'Desktop Safari' },
+];
+
+// A setup project that registers a fresh eventhub account before its tests.
+// eventhub browser projects depend on it, so it only runs when they do.
+const EVENTHUB_BASE = 'https://eventhub.rahulshettyacademy.com';
+const projects = [
+  {
+    name: 'eventhub-setup',
+    testDir: './eventhub',
+    testMatch: /auth\.setup\.js/,
+    use: { ...devices['Desktop Chrome'], baseURL: EVENTHUB_BASE },
+  },
+];
+
+// Build one Playwright project per (site × browser) combination.
+SITES.forEach(site =>
+  BROWSERS.forEach(browser => {
+    projects.push({
+      name: `${site.name}-${browser.name}`,
+      testDir: site.testDir,
+      use: {
+        ...devices[browser.device],
+        baseURL: site.baseURL,
+      },
+      ...(site.name === 'eventhub' ? { dependencies: ['eventhub-setup'] } : {}),
+    });
+  })
+);
+
+module.exports = defineConfig({
   use: {
-    baseURL: 'https://www.saucedemo.com',
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
-    headless: false,
+    headless: true,
     launchOptions: {
-    slowMo: 500,
-  },
+      slowMo: 500,
+    },
   },
 
   fullyParallel: true,
@@ -20,18 +59,5 @@ module.exports = defineConfig({
   workers: process.env.CI ? 1 : undefined,
   reporter: 'html',
 
-  projects: [
-    {
-      name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
-    },
-    {
-      name: 'firefox',
-      use: { ...devices['Desktop Firefox'] },
-    },
-    {
-      name: 'webkit',
-      use: { ...devices['Desktop Safari'] },
-    },
-  ],
+  projects,
 });
