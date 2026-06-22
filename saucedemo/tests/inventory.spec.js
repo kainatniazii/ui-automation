@@ -14,7 +14,7 @@ test.describe('Inventory page', () => {
 
   test('shows 6 products', async ({ page }) => {
     const inv = new InventoryPage(page);
-    expect(await inv.getProductCount()).toBe(6);
+    await expect(inv.inventoryItems).toHaveCount(6);
   });
 
   test('all products have positive price', async ({ page }) => {
@@ -26,7 +26,7 @@ test.describe('Inventory page', () => {
   test('add single item updates cart badge', async ({ page }) => {
     const inv = new InventoryPage(page);
     await inv.addToCartByName('Sauce Labs Backpack');
-    expect(await inv.getCartCount()).toBe(1);
+    await expect(inv.cartBadge).toHaveText('1');
   });
 
   test('remove item decrements cart', async ({ page }) => {
@@ -34,7 +34,7 @@ test.describe('Inventory page', () => {
     await inv.addToCartByName('Sauce Labs Backpack');
     await inv.addToCartByName('Sauce Labs Bike Light');
     await inv.removeFromCartByName('Sauce Labs Backpack');
-    expect(await inv.getCartCount()).toBe(1);
+    await expect(inv.cartBadge).toHaveText('1');
   });
 
   test('sort by price low to high', async ({ page }) => {
@@ -46,9 +46,20 @@ test.describe('Inventory page', () => {
 
   test('sort by name A to Z', async ({ page }) => {
     const inv = new InventoryPage(page);
+
+    // Arrange: force a non-alphabetical starting order so the A→Z
+    // sort has to actually reorder the list (default order is already A→Z).
+    await inv.sortBy('za');
+    const reversed = await inv.getAllProductNames();
+    expect(reversed).toEqual([...reversed].sort().reverse());
+
+    // Act
     await inv.sortBy('az');
     const names = await inv.getAllProductNames();
+
+    // Assert: alphabetical AND genuinely changed from the Z→A order
     expect(names).toEqual([...names].sort());
+    expect(names).not.toEqual(reversed);
   });
 
   test('clicking product opens detail page', async ({ page }) => {

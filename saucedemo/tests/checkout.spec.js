@@ -66,7 +66,7 @@ test.describe('Cart page', () => {
       PRODUCTS.jacket,
     ]);
     const checkout = new CheckoutPage(page);
-    expect(await checkout.getCartItemCount()).toBe(3);
+    await expect(checkout.cartItems).toHaveCount(3);
   });
 
   test('continue shopping returns to inventory', async ({ page }) => {
@@ -114,8 +114,9 @@ test.describe('Checkout step 1 — customer information', () => {
     await checkout.fillShippingInfo('', VALID_CUSTOMER.lastName, VALID_CUSTOMER.postalCode);
     await checkout.clickContinue();
 
-    expect(await checkout.isErrorVisible()).toBe(true);
-    expect(await checkout.getErrorMessage()).toContain('First Name is required');
+    await expect(checkout.errorMessage).toBeVisible();
+    await expect(checkout.errorMessage).toContainText('First Name is required');
+    await expect(page).toHaveURL(/checkout-step-one/);
   });
 
   test('missing last name shows error', async ({ page }) => {
@@ -123,8 +124,9 @@ test.describe('Checkout step 1 — customer information', () => {
     await checkout.fillShippingInfo(VALID_CUSTOMER.firstName, '', VALID_CUSTOMER.postalCode);
     await checkout.clickContinue();
 
-    expect(await checkout.isErrorVisible()).toBe(true);
-    expect(await checkout.getErrorMessage()).toContain('Last Name is required');
+    await expect(checkout.errorMessage).toBeVisible();
+    await expect(checkout.errorMessage).toContainText('Last Name is required');
+    await expect(page).toHaveURL(/checkout-step-one/);
   });
 
   test('missing postal code shows error', async ({ page }) => {
@@ -132,15 +134,18 @@ test.describe('Checkout step 1 — customer information', () => {
     await checkout.fillShippingInfo(VALID_CUSTOMER.firstName, VALID_CUSTOMER.lastName, '');
     await checkout.clickContinue();
 
-    expect(await checkout.isErrorVisible()).toBe(true);
-    expect(await checkout.getErrorMessage()).toContain('Postal Code is required');
+    await expect(checkout.errorMessage).toBeVisible();
+    await expect(checkout.errorMessage).toContainText('Postal Code is required');
+    await expect(page).toHaveURL(/checkout-step-one/);
   });
 
   test('all fields empty shows error', async ({ page }) => {
     const checkout = new CheckoutPage(page);
     await checkout.clickContinue();
 
-    expect(await checkout.isErrorVisible()).toBe(true);
+    await expect(checkout.errorMessage).toBeVisible();
+    await expect(checkout.errorMessage).toContainText('First Name is required');
+    await expect(page).toHaveURL(/checkout-step-one/);
   });
 
 });
@@ -166,7 +171,7 @@ test.describe('Checkout step 2 — order overview', () => {
 
   test('overview shows correct number of items', async ({ page }) => {
     const checkout = new CheckoutPage(page);
-    expect(await checkout.getOverviewItemCount()).toBe(2);
+    await expect(checkout.overviewItems).toHaveCount(2);
   });
 
   test('total equals subtotal plus tax', async ({ page }) => {
@@ -223,14 +228,12 @@ test.describe('Checkout step 3 — order confirmation', () => {
 
   test('confirmation page shows success header', async ({ page }) => {
     const checkout = new CheckoutPage(page);
-    const header   = await checkout.getSuccessHeader();
-    expect(header).toContain('Thank you for your order');
+    await expect(checkout.successHeader).toContainText('Thank you for your order');
   });
 
   test('confirmation page shows dispatch message', async ({ page }) => {
     const checkout = new CheckoutPage(page);
-    const text     = await checkout.getSuccessText();
-    expect(text).toContain('dispatched');
+    await expect(checkout.successText).toContainText('dispatched');
   });
 
   test('back to products button returns to inventory', async ({ page }) => {
@@ -254,13 +257,13 @@ test.describe('Full E2E checkout flow', () => {
     await inv.addToCartByName(PRODUCTS.backpack);
     await inv.addToCartByName(PRODUCTS.bikeLight);
     await inv.addToCartByName(PRODUCTS.jacket);
-    expect(await inv.getCartCount()).toBe(3);
+    await expect(inv.cartBadge).toHaveText('3');
 
     // Step 2 — Go to cart and verify items
     await inv.goToCart();
     await page.waitForURL('**/cart.html');
     const checkout = new CheckoutPage(page);
-    expect(await checkout.getCartItemCount()).toBe(3);
+    await expect(checkout.cartItems).toHaveCount(3);
 
     // Step 3 — Fill in customer info
     await checkout.clickCheckout();
@@ -282,8 +285,7 @@ test.describe('Full E2E checkout flow', () => {
     // Step 5 — Finish and confirm
     await checkout.clickFinish();
     await page.waitForURL('**/checkout-complete.html');
-    const header = await checkout.getSuccessHeader();
-    expect(header).toContain('Thank you for your order');
+    await expect(checkout.successHeader).toContainText('Thank you for your order');
 
     // Step 6 — Return to inventory
     await checkout.clickBackHome();

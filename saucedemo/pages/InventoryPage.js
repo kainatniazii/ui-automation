@@ -28,9 +28,10 @@ class InventoryPage extends BasePage {
   }
 
   async getCartCount() {
-    const visible = await this.cartBadge.isVisible();
-    if (!visible) return 0;
-    return parseInt(await this.cartBadge.textContent());
+    // The badge is absent (not just empty) when the cart is empty.
+    if (await this.cartBadge.count() === 0) return 0;
+    const text = await this.cartBadge.textContent();
+    return parseInt(text ?? '0', 10);
   }
 
   async addToCartByName(productName) {

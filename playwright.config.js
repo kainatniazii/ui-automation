@@ -44,12 +44,16 @@ SITES.forEach(site =>
 
 module.exports = defineConfig({
   use: {
-    trace: 'on-first-retry',
+    // baseURL is set per-project (per site) above.
+    // Keep a trace for local failures too, not just on retry.
+    trace: process.env.CI ? 'on-first-retry' : 'retain-on-failure',
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
-    headless: true,
+    // Run headless by default (and always in CI). Opt into a headed,
+    // slowed-down run locally with HEADED=1 for debugging.
+    headless: process.env.CI ? true : !process.env.HEADED,
     launchOptions: {
-      slowMo: 500,
+      slowMo: process.env.HEADED ? 500 : 0,
     },
   },
 
