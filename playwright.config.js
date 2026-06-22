@@ -5,13 +5,16 @@ module.exports = defineConfig({
 
   use: {
     baseURL: 'https://www.saucedemo.com',
-    trace: 'on-first-retry',
+    // Keep a trace for local failures too, not just on retry.
+    trace: process.env.CI ? 'on-first-retry' : 'retain-on-failure',
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
-    headless: false,
+    // Run headless by default (and always in CI). Opt into a headed,
+    // slowed-down run locally with HEADED=1 for debugging.
+    headless: process.env.CI ? true : !process.env.HEADED,
     launchOptions: {
-    slowMo: 500,
-  },
+      slowMo: process.env.HEADED ? 500 : 0,
+    },
   },
 
   fullyParallel: true,

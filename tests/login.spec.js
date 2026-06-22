@@ -15,8 +15,7 @@ test.describe('Login', () => {
     const login = new LoginPage(page);
     await login.navigate();
     await login.login(users.lockedUser.username, users.lockedUser.password);
-    const error = await login.getErrorMessage();
-    expect(error.toLowerCase()).toContain('locked out');
+    await expect(login.errorMsg).toContainText('locked out', { ignoreCase: true });
   });
 
   test('invalid credentials shows error', async ({ page }) => {
