@@ -7,6 +7,8 @@ const { defineConfig, devices } = require('@playwright/test');
 const SITES = [
   { name: 'saucedemo', testDir: './saucedemo/tests', baseURL: 'https://www.saucedemo.com' },
   { name: 'eventhub',  testDir: './eventhub/tests',  baseURL: 'https://eventhub.rahulshettyacademy.com' },
+  { name: 'dropdowns', testDir: './dropdowns/tests', baseURL: 'https://rahulshettyacademy.com' },
+  { name: 'uploaddownload', testDir: './uploaddownload/tests', baseURL: 'https://rahulshettyacademy.com' },
 ];
 
 const BROWSERS = [
@@ -41,6 +43,14 @@ SITES.forEach(site =>
     });
   })
 );
+
+// API tests need no browser — just a baseURL for the `request` fixture.
+// One standalone project rather than a browser-matrix entry.
+projects.push({
+  name: 'libraryapi',
+  testDir: './libraryapi/tests',
+  use: { baseURL: 'http://216.10.245.166' },
+});
 
 module.exports = defineConfig({
   use: {

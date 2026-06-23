@@ -5,8 +5,17 @@
   "main": "index.js",
   "scripts": {
     "test": "playwright test",
+    "test:no-external": "playwright test --grep-invert @external",
     "test:eventhub": "playwright test --project=eventhub-chromium",
     "test:saucedemo": "playwright test --project=saucedemo-chromium",
+    "test:dropdowns": "playwright test --project=dropdowns-chromium",
+    "test:uploaddownload": "playwright test --project=uploaddownload-chromium",
+    "test:libraryapi": "playwright test --project=libraryapi",
+    "test:headed": "HEADED=1 playwright test",
+    "test:eventhub:headed": "HEADED=1 playwright test --project=eventhub-chromium",
+    "test:saucedemo:headed": "HEADED=1 playwright test --project=saucedemo-chromium",
+    "test:dropdowns:headed": "HEADED=1 playwright test --project=dropdowns-chromium",
+    "test:uploaddownload:headed": "HEADED=1 playwright test --project=uploaddownload-chromium",
     "report": "playwright show-report"
   },
   "keywords": [],
@@ -15,6 +24,7 @@
   "type": "commonjs",
   "devDependencies": {
     "@playwright/test": "^1.61.0",
-    "@types/node": "^25.9.3"
+    "@types/node": "^25.9.3",
+    "xlsx": "^0.18.5"
   }
 }

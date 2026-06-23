@@ -1,0 +1,11 @@
+{
+  "route": {
+    "origin": "DEL",
+    "destination": "MAA"
+  },
+  "passengers": {
+    "adults": 3,
+    "children": 2,
+    "infants": 1
+  }
+}
