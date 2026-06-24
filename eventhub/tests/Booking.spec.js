@@ -6,7 +6,9 @@ const { getAccount }     = require('../test-data/account');
 
 const ATTENDEE = { name: 'Test User', phone: '+91 9876543210' };
 
-test.describe('EventHub — Booking', () => {
+// Tagged @external: hits the live eventhub.rahulshettyacademy.com site.
+// Exclude flaky external runs with:  playwright test --grep-invert @external
+test.describe('EventHub — Booking', { tag: '@external' }, () => {
 
   test('book an event and see confirmation', async ({ loggedInPage }) => {
     const events = new BrowseEvent(loggedInPage);

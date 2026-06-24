@@ -1,7 +1,9 @@
 const { test, expect } = require('../fixtures/auth.fixture');
 const { BrowseEvent }  = require('../pages/BrowseEvent');
 
-test.describe('EventHub — Browse Events', () => {
+// Tagged @external: hits the live eventhub.rahulshettyacademy.com site.
+// Exclude flaky external runs with:  playwright test --grep-invert @external
+test.describe('EventHub — Browse Events', { tag: '@external' }, () => {
 
   test('events page lists events', async ({ loggedInPage }) => {
     const events = new BrowseEvent(loggedInPage);

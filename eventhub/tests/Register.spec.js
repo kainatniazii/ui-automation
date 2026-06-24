@@ -8,7 +8,9 @@ function uniqueEmail(prefix = 'pw_reg') {
   return `${prefix}_${Date.now()}_${rand}@example.com`;
 }
 
-test.describe('EventHub — Register', () => {
+// Tagged @external: hits the live eventhub.rahulshettyacademy.com site.
+// Exclude flaky external runs with:  playwright test --grep-invert @external
+test.describe('EventHub — Register', { tag: '@external' }, () => {
 
   test('valid registration redirects to home', async ({ page }) => {
     const register = new RegisterPage(page);
