@@ -5,7 +5,9 @@ const users            = require('../test-data/users.json');
 
 const HOME = 'https://eventhub.rahulshettyacademy.com/';
 
-test.describe('EventHub — Login', () => {
+// Tagged @external: hits the live eventhub.rahulshettyacademy.com site.
+// Exclude flaky external runs with:  playwright test --grep-invert @external
+test.describe('EventHub — Login', { tag: '@external' }, () => {
 
   test('valid login redirects to home', async ({ page }) => {
     // Uses the account registered by auth.setup.js (fresh each run),
