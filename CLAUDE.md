@@ -10,6 +10,7 @@ In practice:
 - Base feature branches on `staging` (treat `staging` the way standard flow treats `main`).
 - Integrate and verify on `staging`.
 - Open the promotion to `main` only after the work passes review and tests.
+- Before promoting `staging` to `main`, run the `/pr-review` skill and resolve everything it flags. Do not merge until it reports ready.
 
 ## Writing style
 
