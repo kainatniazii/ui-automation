@@ -21,12 +21,12 @@ In practice:
 
 - Imperative subject, capitalized, no trailing period, no conventional-commit prefix (`feat:`, `fix:`, etc.). Keep it to roughly 70 characters.
 - Body: a short paragraph on why the change is needed, then `-` bullets describing what changed, specific to real files, methods, flags, and config keys.
-- Do NOT add a `Co-Authored-By: Claude` trailer.
+- Do NOT add any co-author or auto-generated attribution trailer.
 
 ## PR conventions
 
-- Body follows one of two shapes: `Problem / Change / Effect / Test plan` for fixes and infra, or `Summary / per-area sections / Test plan` for feature additions.
-- The test plan is real: actual commands plus results, not boilerplate.
+- Body follows one of two shapes: `Problem / Change` for fixes and infra, or `Summary / per-area sections` for feature additions.
+- Do not include an Effect or Test plan section.
 
 ## Testing conventions (Playwright)
 
